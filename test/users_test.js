@@ -86,7 +86,7 @@ describe('Users', function() {
       var response;
       before(function(done) {
         chai.request('localhost:3000')
-          .delete('/api/users/' + newUser.emitted.fulfill[0]._id)
+          .del('/api/users/' + newUser.emitted.fulfill[0]._id)
           .end(function(err, res) {
             response = res.body;
             done();
@@ -126,7 +126,19 @@ describe('Users', function() {
         it('does not create a user', function(done) {
           chai.request('localhost:3000')
             .post('/api/users')
-            .send({ username: '' })
+            .send({ username: '', email: 'fail@fail.com' })
+            .end(function(err, res) {
+              var user = User.find({}, function(err, docs) {
+                expect(err).to.eq(null);
+                expect(docs.length).to.eq(0);
+                done();
+              });
+            });
+        });
+        it('returns the validation error message in the body', function(done) {
+          chai.request('localhost:3000')
+            .post('/api/users')
+            .send({username: ''})
             .end(function(err, res) {
               expect(err).to.eq(null);
               expect(res.body.msg).to.include('username');
@@ -137,13 +149,26 @@ describe('Users', function() {
       });
     });
     describe('PUT', function() {
-      it('does NOT update a user', function() {
-
+      it('returns the error message in the body', function(done) {
+        chai.request('localhost:3000')
+          .put('/api/users/123456789wrong')
+          .send({username: 'thiswillfail'})
+          .end(function(err, res) {
+            expect(err).to.eq(null);
+            expect(res.body.msg).to.eq('invalid user');
+            done();
+          });
       });
     });
     describe('DELETE', function() {
-      it('does NOT delete a user', function() {
-
+      it('returns an error message in the body', function(done) {
+        chai.request('localhost:3000')
+          .del('/api/users/123456789wrong')
+          .end(function(err, res) {
+            expect(err).to.eq(null);
+            expect(res.body.msg).to.eq('invalid user');
+            done();
+          });
       });
     });
   });

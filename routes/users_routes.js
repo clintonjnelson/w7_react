@@ -11,14 +11,13 @@ module.exports = function(router) {
   // C: get user (see user info)
   router.get('/users/:username', function(req, res) {
     var username = req.params.username;  // // BODY EMPTY, PARAMS HAS: username
-    User.find({'username': username}, function(err, docs) {  // lookup in db
+    User.find({'username': username}, function(err, data) {  // lookup in db
       if (err) {  // handle error - conole it, vague message user
         console.log(err);
         return res.status(500).json( {msg: 'internal server error'} );
       }
 
-      // console.log('GET DATA HERE: ', docs);  // print out name
-      res.json(docs);  // send raw data to user
+      res.json(data);  // send raw data to user
     });  // look in user model
   });
 
@@ -53,6 +52,8 @@ module.exports = function(router) {
           return res.json({msg: 'username already exists - please try a different username'});
         case !!(err && err.username):
           return res.json( {msg: err.username.message.replace("Path", '')} );
+        case !!(err && err.name === 'CastError'):
+          return res.json( {msg: 'invalid user'} );
         case !!err:
           console.log(err);
           return res.status(500).json({msg: 'internal server error'});
@@ -65,13 +66,15 @@ module.exports = function(router) {
   // D: destroy user
   router.delete('/users/:id', function(req, res) {
     User.remove({'_id': req.params.id}, function(err, data) {
-      if (err) {
-        console.log(err);
-        return res.status(500).json({msg: 'internal server error'});
+      switch(true) {
+        case !!(err && err.name === 'CastError'):
+          return res.json( {msg: 'invalid user'} );
+        case !!err:
+          console.log(err);
+          return res.status(500).json({msg: 'internal server error'});
       }
 
       // To get a report back on outcome, check data.result.n
-      // console.log(data.result.n + ' users removed');  // server
       res.json({msg: (data.result.n ? 'user removed' : 'user could not be removed')});  //returns 0 or more
     });
   });
