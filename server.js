@@ -12,7 +12,7 @@ mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/users_developm
 require('./routes/users_routes')(usersRoutes);
 
 // Assign base route & Router of subroutes to app
-app.use('/api', usersRoutes)
+app.use('/api', usersRoutes);
 
 // Start server on env port or default 3000
 app.listen(process.env.PORT || 3000, function() {

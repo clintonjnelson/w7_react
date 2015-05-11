@@ -8,7 +8,7 @@ module.exports = function(router) {
   router.use(bodyparser.json());  // api will receive JSON
 
 
-  // C: get user (see user info)
+  // R: get user (see user info)
   router.get('/users/:username', function(req, res) {
     var username = req.params.username;  // // BODY EMPTY, PARAMS HAS: username
     User.find({'username': username}, function(err, data) {  // lookup in db
@@ -21,7 +21,7 @@ module.exports = function(router) {
     });  // look in user model
   });
 
-  // R: create user
+  // C: create user
   router.post('/users', function(req, res) {
     // get passed info from req.body & use mongoose to crate a new 'Thing'
     var newUser = new User(req.body);  // assumes formatting of body is proper

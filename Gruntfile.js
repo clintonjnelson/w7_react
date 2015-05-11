@@ -8,15 +8,26 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     jscs: {
-      src: ['./*.js', './test/**/*.js', './lib/**/*.js'],
+      src: ['Gruntfile.js',
+              '*.js',
+              'models/**/*.js',
+              'routes/**/*.js',
+              'test/**/*.js'
+               ],
       options: {
-        requireCurlyBraces: null,
+        requireCurlyBraces: [false],
         verbose: true
       }
     },
     jshint: {
       dev: {
-        src: ['Gruntfile.js', 'test/**/*.js', 'bmx.js', '/lib/*.js']
+        src: ['Gruntfile.js',
+              'package.json',
+              '*.js',
+              'models/**/*.js',
+              'routes/**/*.js',
+              'test/**/*.js'
+               ]
       },
       options: {
         jshintrc: true
@@ -36,6 +47,6 @@ module.exports = function(grunt) {
   });
 
   // Custom Task Chains
-  grunt.registerTask('test', ['jshint:dev', 'mochaTest', 'jscs']);
+  grunt.registerTask('test', ['jshint:dev', 'jscs', 'mochaTest']);
   grunt.registerTask('default', ['test']);
 };

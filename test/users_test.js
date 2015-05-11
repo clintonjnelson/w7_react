@@ -109,7 +109,7 @@ describe('Users', function() {
   });
 
 
-  describe('with non-existing user', function() {
+  describe('with NON-existing user', function() {
     describe('GET', function() {
       it('returns a blank array', function(done) {
         chai.request('localhost:3000')
