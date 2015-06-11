@@ -1,6 +1,6 @@
 'use strict';
 
-var User = require('../models/User'); // Require in model
+var User       = require('../models/User'); // Require in model
 var bodyparser = require('body-parser');
 
 // setup function to export; takes express router
@@ -9,9 +9,9 @@ module.exports = function(router) {
 
 
   // R: get user (see user info)
-  router.get('/users/:username', function(req, res) {
+  router.get('/users', function(req, res) {
     var username = req.params.username;  // // BODY EMPTY, PARAMS HAS: username
-    User.find({'username': username}, function(err, data) {  // lookup in db
+    User.find({}, function(err, data) {  // lookup in db
       if (err) {  // handle error - conole it, vague message user
         console.log(err);
         return res.status(500).json( {msg: 'internal server error'} );

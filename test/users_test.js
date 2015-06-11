@@ -1,11 +1,11 @@
 'use strict';
 
-var chai = require('chai');               // needed for should/expect assertions
+var chai     = require('chai');               // needed for should/expect assertions
 var chaiHttp = require('chai-http');      // needed for requests
-var expect = chai.expect;
-chai.use(chaiHttp);                       // tell chai to use chai-http
+var expect   = chai.expect;
 var mongoose = require('mongoose');       // needed to working with server
-var User = require('../models/User.js');  // bring in model constructor to test
+var User     = require('../models/User.js');  // bring in model constructor to test
+chai.use(chaiHttp);                       // tell chai to use chai-http
 
 // Point to db via
 process.env.MONGOLAB_URI = 'mongodb://localhost/user_development';
@@ -33,8 +33,9 @@ describe('Users', function() {
       var joe;
       before(function(done) {
         chai.request('localhost:3000')
-          .get('/api/users/joe')
+          .get('/api/users')
           .end(function(err, res) {
+            console.log("RES BODY IS: ", res.body);
             joe = res.body[0];
             done();
           });
@@ -47,9 +48,6 @@ describe('Users', function() {
       });
       it('returns the user\'s  email', function() {
         expect(joe.email).to.eql('joe@joe.com');
-      });
-      it('returns the user\'s  passtoken', function() {
-        expect(joe.passtoken).to.eql('1234');
       });
     });
 
@@ -98,7 +96,7 @@ describe('Users', function() {
           .get('/api/users/joe')
           .end(function(err, res) {
             expect(err).to.eql(null);
-            expect(res.body).to.eql([]);
+            expect(res.body).to.eql({});
             done();
           });
       });

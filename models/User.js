@@ -5,10 +5,9 @@ var mongoose = require('mongoose');
 
 // Setup schema via mongoose function
 var userSchema = mongoose.Schema({
-  username: String,
-  email: String,
-  passtoken: String,
-  created_at: Date
+  username:    String,
+  email:       String,
+  description: String
 });
 
 // Validations
